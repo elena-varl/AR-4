@@ -52,6 +52,8 @@ public class AugmentedImageRenderer {
 
   // Create a new pose for the Andy
   private Pose andyPose = Pose.IDENTITY;
+  public float rotation = -0.99f;
+  public float rotationDirection = 1f;
 
 
   public AugmentedImageRenderer() {}
@@ -166,7 +168,7 @@ public class AugmentedImageRenderer {
     // You mustWe need to do this adjustment because the maze obj file
     // is not centered around origin. Normally when you
     // work with your own model, you don't have this problem.
-    Pose mazeModelLocalOffset = Pose.makeTranslation(
+    /* Pose mazeModelLocalOffset = Pose.makeTranslation(
             -251.3f * mazeScaleFactor,
             0.0f,
             129.0f * mazeScaleFactor);
@@ -178,24 +180,32 @@ public class AugmentedImageRenderer {
 
     mazeRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
 
+     */
+
     // Render Andy, standing on top of the maze
     // Use these code to replace previous code for rendering the Andy object
     //
     // Adjust the Andy's rendering position
     // The Andy's pose is at the maze's vertex's coordinate
-    Pose andyPoseInImageSpace = Pose.makeTranslation(
+
+    /* Pose andyPoseInImageSpace = Pose.makeTranslation(
             andyPose.tx() * mazeScaleFactor,
             andyPose.ty() * mazeScaleFactor,
             andyPose.tz() * mazeScaleFactor);
-    //float y = (float) sin(90);
-   // float w = (float) cos(90);
-    //Pose andyModellocalRotation =Pose.makeRotation(0,y,0,w);
+    float y = (float) sin(90);
+    float w = (float) cos(90);
+    Pose andyModellocalRotation =Pose.makeRotation(0,y,0,w);
 
-    anchorPose.compose(andyPoseInImageSpace).toMatrix(modelMatrix, 0);
-   // anchorPose.compose(andyModellocalRotation).toMatrix(modelMatrix,0);
+    anchorPose.compose(andyPoseInImageSpace).toMatrix(modelMatrix, 0);*/
 
-    andyRenderer.updateModelMatrix(modelMatrix, 0.00125f);
+    Pose worldBoundaryPose = anchorPose.compose(new Pose(new float[] {0f, 0f, 0f}, new float[] {rotationDirection, 0f, 0f, rotation}));
+
+
+
+    worldBoundaryPose.toMatrix(modelMatrix, 0);
+    andyRenderer.updateModelMatrix(modelMatrix, 0.01f);
     andyRenderer.draw(viewMatrix, projectionMatrix, colorCorrectionRgba, tintColor);
+
 
   }
 

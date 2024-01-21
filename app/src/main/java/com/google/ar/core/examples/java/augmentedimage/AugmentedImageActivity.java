@@ -106,6 +106,15 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
     setContentView(R.layout.activity_main);
     surfaceView = findViewById(R.id.surfaceview);
     displayRotationHelper = new DisplayRotationHelper(/*context=*/ this);
+    surfaceView.setOnClickListener(new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+        if(Math.abs(augmentedImageRenderer.rotation) >= 1){
+          augmentedImageRenderer.rotationDirection *= -1;
+        }
+        augmentedImageRenderer.rotation += augmentedImageRenderer.rotationDirection * 0.1f;
+      }
+    });
 
     // Set up renderer.
     surfaceView.setPreserveEGLContextOnPause(true);
@@ -425,7 +434,7 @@ public class AugmentedImageActivity extends AppCompatActivity implements GLSurfa
   }
 
   private Bitmap loadAugmentedImageBitmap() {
-    try (InputStream is = getAssets().open("default.jpg")) {
+    try (InputStream is = getAssets().open("default.png")) {
       return BitmapFactory.decodeStream(is);
     } catch (IOException e) {
       Log.e(TAG, "IO exception loading augmented image bitmap.", e);
